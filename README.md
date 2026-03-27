@@ -1,4 +1,4 @@
-# LLM-Based Architectural Conformance Study – Replication Package
+# Can LLMs Turn Design Discussions into Architectural Tests? An Empirical Study with Codestral – Replication Package
 
 This repository contains the replication package for our study on using Large Language Models (LLMs) to support **architectural conformance checking** through the extraction of architectural rules and automatic test generation.
 
