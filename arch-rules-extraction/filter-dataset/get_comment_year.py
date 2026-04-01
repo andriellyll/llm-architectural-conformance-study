@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-INPUT_CSV = "matched_comments_from_dataset.csv"
-OUTPUT_CSV = "dataset_with_comment_year.csv"
+INPUT_CSV = "matched_comments_from_dataset_sample.csv"
+OUTPUT_CSV = "sample_dataset_with_comment_year.csv"
 
 CACHE_FILE = "comment_year_cache.json"
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")

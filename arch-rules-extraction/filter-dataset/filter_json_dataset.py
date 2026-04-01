@@ -1,4 +1,3 @@
-import json
 import ijson
 
 import csv
@@ -13,10 +12,9 @@ KEYWORDS = [
     "service interface", "factory"
 ]
 
-
-INPUT_JSON = "mined-comments-25stars-25prs-Java.json" # dowload from https://www.kaggle.com/datasets/pelmers/github-public-pull-request-comments
-OUTPUT_CSV = "matched_comments_from_dataset.csv"
-
+# this is a sample for demonstration purpose. dowload original dataset from https://www.kaggle.com/datasets/pelmers/github-public-pull-request-comments (we used mined-comments-25stars-25prs-Java.json)
+INPUT_JSON = "mined_comments_sample.json" 
+OUTPUT_CSV = "matched_comments_from_dataset_sample.csv"
 
 def contains_keywords(text: str):
     """
