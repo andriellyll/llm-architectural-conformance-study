@@ -8,6 +8,9 @@ import dotenv
 import re
 import requests
 from shared.prompts import get_evaluation_prompt
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 csv.field_size_limit(sys.maxsize)
 dotenv.load_dotenv()
@@ -16,11 +19,11 @@ MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 
 client = Mistral()
 
-INPUT_CSV = "dataset_with_tests.csv"
-OUTPUT_CSV = "test_evaluation_results.csv"
+INPUT_CSV = BASE_DIR / "../test_generation/test_generation_results.csv"
+OUTPUT_CSV = BASE_DIR / "test_evaluation_results.csv"
 
-MODEL_NAME = "codestral-latest"
-SLEEP_SECONDS = 20  # ajuste conforme rate limit
+MODEL_NAME = "mistral-large-latest"
+SLEEP_SECONDS = 2  # ajuste conforme rate limit
 
 def evaluate_test(rule, test_code):
 

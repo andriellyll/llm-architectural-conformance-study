@@ -1,172 +1,183 @@
-# Can LLMs Turn Design Discussions into Architectural Tests? An Empirical Study with Codestral – Replication Package
 
-This repository contains the replication package for our study on using Large Language Models (LLMs) to support **architectural conformance checking** through the extraction of architectural rules and automatic test generation.
+# LLM-Based Architectural Conformance Study – Replication Package
 
-The goal of this package is to enable other researchers and practitioners to **reproduce our experiments**, inspect intermediate artifacts, and extend our approach.
+This repository contains the replication package for our study on using Large Language Models (LLMs) to support **architectural conformance checking** through rule extraction and automatic test generation.
+
+The package enables researchers and practitioners to **reproduce our pipeline**, inspect intermediate artifacts, and extend our approach.
 
 ---
 
 ## 📦 Repository Structure
 
 ```
-├── LICENSE
-├── README.md
-├── arch-rules-extraction
-│   ├── arch-rules-classification
-│   │   ├── architectural_restrictions_dataset.csv
-│   │   ├── classify_comments.py
-│   │   └── filter_architectural_rules_from_classification.py
-│   └── filter-dataset
-│       ├── filter_by_comment_year.ipynb
-│       ├── filter_json_dataset.py
-│       ├── get_comment_year.py
-│       └── matched_comments_from_dataset.csv
-├── evaluation
-│   └── automatic_evaluation.py
-├── sampling
-│   ├── get_classification_validation_sample.py
-│   └── get_manual_evaluation_sample.py
-├── shared
-│   └── prompts.py
-└── test-generation
-    ├── archunit-docs
-    │   └── archunit
-    ├── constants.py
-    ├── db-creation.py
-    └── test-generation.py
+.
+├── arch_rules_extraction       # Rule extraction pipeline
+├── datasets                    # Final and intermediate datasets
+├── evaluation                  # Automatic evaluation scripts and results
+├── sampling                    # Sampling for validation and manual analysis
+├── shared                      # Prompts used across the pipeline
+├── test_generation             # RAG-based test generation pipeline
+├── requirements.txt
+└── README.md
+
+````
+
+> ⚠️ Note: Sample files are included for demonstration purposes. The full dataset used in the study is described in the paper.
+
+---
+
+## ⚙️ Setup
+
+### 1. Create virtual environment and install dependencies
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+````
+
+### 2. Configure environment variables
+
+Copy the example file and add your API keys:
+
+```bash
+cp .env.example .env
+```
+
+Then populate `.env` with:
+
+* `MISTRAL_API_KEY`
+* `GITHUB_TOKEN`
+
+---
+
+## ▶️ How to Run the Pipeline
+
+> ⚠️ Run all commands from the **root directory** of the repository.
+
+### Step 1 — Dataset Filtering
+
+```bash
+python3 -m arch_rules_extraction.filter_dataset.filter_json_dataset
+python3 -m arch_rules_extraction.filter_dataset.filter_by_comment_year
+```
+
+This stage filters the original dataset and restricts comments by year.
+
+---
+
+### Step 2 — Architectural Rule Extraction
+
+```bash
+python3 -m arch_rules_extraction.arch_rules_classification.classify_comments
+python3 -m arch_rules_extraction.arch_rules_classification.filter_architectural_rules_from_classification
+```
+
+This stage uses an LLM to identify comments that express architectural design rules.
+
+---
+
+### Step 3 — Setup Vector Database (PGVector)
+
+```bash
+docker run --name pgvector-db \
+  -e POSTGRES_PASSWORD=mysecretpassword \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_DB=archunit_docs \
+  -p 5432:5432 \
+  -d pgvector/pgvector:pg16
 ```
 
 ---
 
-## 🔍 Overview of the Pipeline
+### Step 4 — Test Generation (RAG)
 
-The study is organized into four main stages:
+```bash
+python3 -m test_generation.db_creation
+python3 -m test_generation.test_generation
+```
 
-1. **Dataset Filtering**
-2. **Architectural Rule Extraction**
-3. **Test Generation**
-4. **Evaluation**
-
----
-
-## 🧹 1. Dataset Filtering
-
-Located in: `arch-rules-extraction/filter-dataset`
-
-This step prepares the dataset by filtering and preprocessing comments.
-
-### Main scripts:
-
-* `filter_json_dataset.py` – filters the raw dataset
-* `get_comment_year.py` – extracts temporal metadata
-* `filter_by_comment_year.ipynb` – optional filtering by time
-* `matched_comments_from_dataset.csv` – resulting filtered dataset
+This stage builds the vector database from ArchUnit documentation and generates tests from extracted rules.
 
 ---
 
-## 🏗️ 2. Architectural Rule Extraction
+### Step 5 — Evaluation
 
-Located in: `arch-rules-extraction/arch-rules-classification`
+```bash
+python3 -m evaluation.automatic_evaluation
+```
 
-This stage identifies architectural rules from developer discussions using LLM-based classification.
-
-### Main scripts:
-
-* `classify_comments.py` – classifies comments using LLM prompts
-* `filter_architectural_rules_from_classification.py` – extracts only relevant architectural rules
-
-### Dataset:
-
-* `architectural_restrictions_dataset.csv` – labeled dataset used in the study
+This stage evaluates the generated tests using an LLM-as-a-Judge approach.
 
 ---
 
-## 🧪 3. Sampling
+## 📊 Datasets
 
-Located in: `sampling`
+This repository includes both **sample inputs for reproducibility** and **datasets generated in the study**.
 
-This module generates samples for validation and manual evaluation.
+### 🔹 Sample Input Data
 
-### Scripts:
+The files in `arch_rules_extraction/filter_dataset/` (e.g., `mined_comments_sample.json`) correspond to a **small sample extracted from the original Kaggle dataset**.
 
-* `get_classification_validation_sample.py` – sample for classification validation
-* `get_manual_evaluation_sample.py` – sample for human evaluation
+These samples are provided to:
+- Enable quick execution of the pipeline
+- Avoid the overhead of processing the full dataset, which is large and time-consuming
 
----
-
-## 🤖 4. Test Generation
-
-Located in: `test-generation`
-
-This stage generates architectural conformance tests based on extracted rules.
-
-### Components:
-
-* `test-generation.py` – main test generation pipeline
-* `db-creation.py` – prepares the vector database for retrieval
-* `constants.py` – configuration parameters
-* `archunit-docs/` – local documentation used for retrieval-augmented generation
+All pipeline steps can be executed using these sample files.
 
 ---
 
-## 📊 5. Evaluation
+### 🔹 Generated Datasets
 
-Located in: `evaluation`
+Located in `datasets/`:
 
-This module performs automatic evaluation of the generated tests.
+- `matched_comments_from_original_dataset.csv`  
+  → Intermediate dataset obtained after applying **keyword-based filtering** to the original dataset
 
-### Script:
+- `architectural_restrictions_dataset.csv`  
+  → Final dataset produced in this study, containing **comments classified as design rules**
 
-* `automatic_evaluation.py` – evaluates generated outputs against expected criteria
-
----
-
-## 🧩 Shared Components
-
-Located in: `shared`
-
-* `prompts.py` – contains all prompts used across different stages of the pipeline
+This final dataset corresponds to the output of the full pipeline when executed on the complete dataset.
 
 ---
 
-## ▶️ How to Run
+### 🔹 Notes
 
-> ⚠️ Before running, ensure you have Python installed and all required dependencies configured.
-
-### Suggested execution order:
-
-1. Filter dataset
-2. Run classification
-3. Extract architectural rules
-4. Generate samples (optional)
-5. Run test generation
-6. Execute evaluation
-
-Each script can be run independently, depending on the stage you want to reproduce.
+- The **full original dataset** is not included due to its size, but can be obtained from Kaggle
+- The provided sample ensures that the pipeline can be **validated end-to-end without requiring the full dataset**
 
 ---
 
-## 📄 Reproducibility Notes
+## 🧩 Key Components
 
-* All prompts used in the study are available in `shared/prompts.py`
-* Intermediate datasets are included when possible
-* The pipeline is modular, allowing partial reproduction (e.g., only classification or only test generation)
+* `shared/prompts.py` → all prompts used in classification, generation, and evaluation
+* `test_generation/archunit-docs/` → documentation used for retrieval (RAG)
+* `evaluation/test_evaluation_results.csv` → example evaluation outputs
+* `test_generation/test_generation_results.csv` → generated tests
+
+---
+
+## 🔁 Reproducibility Notes
+
+* The pipeline is modular and can be executed partially (e.g., only classification or only test generation)
+* Sample datasets are provided for quick execution
+* Prompts and configurations are fully available
 
 ---
 
 ## 📌 Disclaimer
 
-This repository is intended for **research and replication purposes only**. It does not provide a production-ready solution for architectural conformance checking.
+This repository is intended for **research and replication purposes only** and is not a production-ready solution.
 
----
+<!-- ---
 
-## 🤝 Contributions
+## 📚 Citation
 
-Contributions are welcome for:
+If you use this repository, please cite our paper:
 
-* Improving reproducibility
-* Extending experiments
-* Supporting additional tools or datasets
+```
+[TO BE FILLED AFTER PUBLICATION]
+``` -->
 
 ---
 

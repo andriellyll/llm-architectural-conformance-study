@@ -1,0 +1,25 @@
+repository,comment_url,author,author_association,file_path,line,comment_body,matched_keywords,owner,repo,comment_id,comment_year,is_design_restriction,generated_test,syntactic_validity,correct_archunit_usage,semantic_alignment_score,violation_detection_potential,evaluation_explanation
+,https://github.com/iluwatar/java-design-patterns/pull/2007#discussion_r979213878,iluwatar,OWNER,inheritance-mapper/src/main/java/com/iluwatar/InheritanceMapper/App.java,13.0,Please explain the pattern purpose shortly. Then explain how this example implements it.,implements,iluwatar,java-design-patterns,979213878,2022,Yes,NO_ARCHITECTURAL_TEST_POSSIBLE,True,False,0,0,"The test is syntactically valid as a placeholder but does not use any ArchUnit APIs. It cannot represent or enforce the architectural rule, as it lacks all ArchUnit constructs and logic."
+,https://github.com/dbeaver/dbeaver/pull/19687#discussion_r1164189070,ShadelessFox,MEMBER,plugins/org.jkiss.dbeaver.ext.clickhouse/src/org/jkiss/dbeaver/ext/clickhouse/model/ClickhouseCatalog.java,,"```suggestion public class ClickhouseCatalog extends GenericCatalog implements DBPObjectStatisticsCollector, DBPSystemObject { ```","extends, implements",dbeaver,dbeaver,1164189070,2023,Yes,"```java
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.lang.ArchRule;
+import org.junit.Test;
+
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+
+public class ClickhouseCatalogArchitectureTest {
+
+    @Test
+    public void clickhouseCatalogShouldExtendGenericCatalog() {
+        JavaClasses importedClasses = new ClassFileImporter()
+                .importPackages(""org.jkiss.dbeaver.ext.clickhouse"");
+
+        ArchRule rule = classes()
+                .that().haveSimpleName(""ClickhouseCatalog"")
+                .should().beAssignableTo(""org.jkiss.dbeaver.model.impl.GenericCatalog"");
+
+        rule.check(importedClasses);
+    }
+}
+```",True,True,1,2,"The test correctly checks if ClickhouseCatalog extends GenericCatalog, but ignores the additional interfaces (DBPObjectStatisticsCollector, DBPSystemObject) specified in the rule. ArchUnit usage is correct, and the test would reliably fail if the extension were missing."

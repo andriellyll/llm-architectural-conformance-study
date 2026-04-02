@@ -4,7 +4,7 @@ import os
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 import psycopg2
-from constants import *
+from test_generation.constants import *
 from sqlalchemy import make_url
 from llama_index.llms.groq import Groq
 from llama_index.vector_stores.postgres import PGVectorStore
@@ -14,6 +14,7 @@ from llama_index.core.node_parser import HTMLNodeParser
 
 from bs4 import BeautifulSoup
 import re
+
 
 def clean_text(text: str) -> str:
     """
@@ -30,7 +31,6 @@ def preprocess_html(file_path):
         soup = BeautifulSoup(f.read(), 'html.parser')
 
     cleaned_text = clean_text(soup.get_text())
-    print(cleaned_text[:100])  # Print primeiros 200 caracteres para verificação
 
     return cleaned_text
 

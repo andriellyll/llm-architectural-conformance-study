@@ -1,5 +1,5 @@
 from sqlalchemy import make_url
-from constants import *
+from test_generation.constants import *
 from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import VectorStoreIndex, Settings
@@ -9,6 +9,9 @@ import time
 import os
 import csv
 from shared.prompts import get_test_generation_prompt
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 load_dotenv()
 
@@ -75,8 +78,8 @@ START_AT = 1  # número da linha a partir da qual o processamento deve começar 
 # =====================
 # CSV STREAMING
 # =====================
-INPUT_CSV = "../arch-rules-extraction/arch-rules-classification/architectural_restrictions_dataset.csv"
-OUTPUT_CSV = "test_generation_results.csv"
+INPUT_CSV = BASE_DIR / "../arch_rules_extraction/arch_rules_classification/design_restrictions_only.csv"
+OUTPUT_CSV = BASE_DIR / "test_generation_results.csv"
 
 with open(INPUT_CSV, newline="", encoding="utf-8") as infile, \
      open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as outfile:
