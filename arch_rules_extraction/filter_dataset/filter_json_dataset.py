@@ -2,6 +2,10 @@ import ijson
 
 import csv
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
 # 🔑 Palavras-chave 
 KEYWORDS = [
     "must implement", "should implement", "must use", "should use", "must not implement", "discouraged",
@@ -13,8 +17,9 @@ KEYWORDS = [
 ]
 
 # this is a sample for demonstration purpose. dowload original dataset from https://www.kaggle.com/datasets/pelmers/github-public-pull-request-comments (we used mined-comments-25stars-25prs-Java.json)
-INPUT_JSON = "mined_comments_sample.json" 
-OUTPUT_CSV = "matched_comments_from_dataset_sample.csv"
+
+INPUT_JSON = BASE_DIR / "mined_comments_sample.json"
+OUTPUT_CSV = BASE_DIR / "matched_comments_from_dataset_sample.csv"
 
 def contains_keywords(text: str):
     """

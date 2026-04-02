@@ -4,15 +4,20 @@ import dotenv
 import time
 import sys
 from shared.prompts import get_design_rule_classification_prompt
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 csv.field_size_limit(sys.maxsize)
 
 dotenv.load_dotenv()
 
-client = Mistral()
+MISTRAL_API_KEY = dotenv.get_key(dotenv.find_dotenv(), "MISTRAL_API_KEY")
 
-INPUT_CSV = "../filter-dataset/matched_comments_from_dataset.csv"   # arquivo de entrada
-OUTPUT_CSV = "classified_comments.csv"  # arquivo de saída
+client = Mistral(api_key=MISTRAL_API_KEY)
+
+INPUT_CSV = BASE_DIR / "../filter_dataset/sample_dataset_filtered_2020.csv"   # arquivo de entrada
+OUTPUT_CSV = BASE_DIR / "sample_classified_comments.csv"  # arquivo de saída
 
 def classify_comment(comment):
     prompt = get_design_rule_classification_prompt(comment)
@@ -48,6 +53,6 @@ with open(INPUT_CSV, newline='', encoding='utf-8') as infile, \
             row["is_design_restriction"] = label
         writer.writerow(row)
         print(f"✓ Processado: {comment[:50]}... → {row['is_design_restriction']}")
-        time.sleep(20)
+        time.sleep(5)
 
 print(f"\n✅ Classificação concluída! Resultados salvos em: {OUTPUT_CSV}")

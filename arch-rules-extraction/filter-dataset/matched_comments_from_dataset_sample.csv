@@ -1,4 +1,0 @@
-repository,comment_url,author,author_association,file_path,line,comment_body,matched_keywords
-,https://github.com/zxing/zxing/pull/242#discussion_r19289861,srowen,CONTRIBUTOR,core/src/test/java/com/google/zxing/aztec/decoder/DecoderTest.java,,Add yourself to `AUTHORS`. I am avoiding `@author` tags.,avoid
-,https://github.com/zxing/zxing/pull/242#discussion_r19289902,srowen,CONTRIBUTOR,core/src/test/java/com/google/zxing/common/BitMatrixTestCase.java,,Really minor but I prefer to avoid names starting with _. Just call it `dataMatrixClone` or something.,avoid
-,https://github.com/zxing/zxing/pull/481#discussion_r42320918,srowen,CONTRIBUTOR,core/src/main/java/com/google/zxing/oned/Code93Writer.java,16,"Sure, is this mostly a clone of the Code 39 writer? is there any opportunity to refactor and avoid duplication here?",avoid

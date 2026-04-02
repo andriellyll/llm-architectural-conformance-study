@@ -8,13 +8,17 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 from dotenv import load_dotenv
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
 load_dotenv()
 
 
-INPUT_CSV = "matched_comments_from_dataset_sample.csv"
-OUTPUT_CSV = "sample_dataset_with_comment_year.csv"
+INPUT_CSV = BASE_DIR / "matched_comments_from_dataset_sample.csv"
+OUTPUT_CSV = BASE_DIR / "sample_dataset_with_comment_year.csv"
 
-CACHE_FILE = "comment_year_cache.json"
+CACHE_FILE = BASE_DIR / "comment_year_cache.json"
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}"
@@ -139,6 +143,12 @@ with open(CACHE_FILE, "w") as f:
 # -----------------------------
 df["comment_year"] = df["comment_id"].map(cache)
 
-df.to_csv(OUTPUT_CSV, index=False)
+print("Total comments before filtering:", len(df))
 
-print("Dataset salvo:", OUTPUT_CSV)
+df_filtered = df[df["comment_year"] >= 2020]
+
+print("Total comments after filtering:", len(df_filtered))
+
+df_filtered.to_csv(BASE_DIR / "sample_dataset_filtered_2020.csv", index=False)
+
+print("Filtered dataset saved:", OUTPUT_CSV)
