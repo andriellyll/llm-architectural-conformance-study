@@ -1,0 +1,36 @@
+# Keywords used for initial keyword-based filtering of GitHub pull request comments
+# These keywords were applied case-insensitively to identify candidate comments
+# potentially expressing architectural or design constraints.
+# See: arch_rules_extraction/filter_dataset/filter_json_dataset.py
+
+must implement
+should implement
+must use
+should use
+must not implement
+should not implement
+must not use
+should not use
+required by
+recommended
+avoid
+discouraged
+enforced
+expected to
+intended to
+not intended
+violates design
+design intent
+consistent with design
+interface
+abstract class
+base class
+subclass
+extends
+implements
+override
+inherit
+contract
+API
+service
+factory

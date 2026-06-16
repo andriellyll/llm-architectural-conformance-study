@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite the paper below."
+type: software
+title: "Replication Package: Can LLMs Turn Design Discussions into Architectural Tests? An Exploratory Study with Codestral"
+authors:
+  - family-names: Lucena
+    given-names: Andrielly
+    affiliation: Federal University of Campina Grande
+  - family-names: Alves
+    given-names: Everton L. G.
+    affiliation: Federal University of Campina Grande
+  - family-names: Brunet
+    given-names: João
+    affiliation: Federal University of Campina Grande
+repository-code: "https://github.com/andriellyll/llm-architectural-conformance-study"
+license: MIT
+preferred-citation:
+  type: conference-paper
+  title: "Can LLMs Turn Design Discussions into Architectural Tests? An Exploratory Study with Codestral"
+  authors:
+    - family-names: Lucena
+      given-names: Andrielly
+      affiliation: Federal University of Campina Grande
+    - family-names: Alves
+      given-names: Everton L. G.
+      affiliation: Federal University of Campina Grande
+    - family-names: Brunet
+      given-names: João
+      affiliation: Federal University of Campina Grande
+  conference:
+    name: "20th European Conference on Software Architecture (ECSA 2026)"
+  year: 2026
