@@ -1,10 +1,13 @@
 import pandas as pd
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 # =========================
 # Configurações
 # =========================
-INPUT_CSV = "design_restrictions_only.csv"
-OUTPUT_CSV = "classification_validation_sample.csv"
+INPUT_CSV = BASE_DIR / "../arch_rules_extraction/arch_rules_classification/design_restrictions_only.csv"
+OUTPUT_CSV = BASE_DIR / "classification_validation_sample.csv"
 
 SAMPLE_SIZE = 270
 RANDOM_SEED = 42  

@@ -79,7 +79,7 @@ The table below maps the main quantitative claims in the paper to the correspond
 | All LLM prompts | `shared/prompts.py` |
 | Keyword list | `arch_rules_extraction/filter_dataset/keywords.txt` |
 | Classification annotation guidelines | `evaluation/annotation_guidelines.md` |
-| Classification validation data | `datasets/classification_validation_sample_annotated.csv` |
+| Classification validation data (both annotators, divided sample) | `datasets/classification_validation_sample_annotated.csv` |
 
 ---
 
@@ -87,7 +87,7 @@ The table below maps the main quantitative claims in the paper to the correspond
 
 ### Requirements
 
-- Python 3.10+
+- Python 3.10 or 3.11 (tested on 3.11.9)
 - Docker (for the vector database)
 - Active [Mistral AI API key](https://console.mistral.ai/) (required for Steps 2, 4, and 5)
 - GitHub personal access token (required for Step 1b only)
@@ -98,6 +98,17 @@ The table below maps the main quantitative claims in the paper to the correspond
 python3 -m venv venv
 source venv/bin/activate        # Linux/macOS
 # venv\Scripts\activate         # Windows
+```
+
+Install PyTorch first (CPU-only, works on all platforms):
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+```
+
+Then install the remaining dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
@@ -121,7 +132,9 @@ Wait for the container to be healthy before proceeding to Step 3 of the pipeline
 
 ## Quick Verification (Smoke Test)
 
-To confirm your environment is correctly set up before running the full pipeline, run the keyword filtering step on the provided sample file:
+Run the two steps below to confirm that both the Python environment and the database container are correctly set up before running the full pipeline.
+
+**Step 1 — Python environment** (no API key required, < 5 seconds)
 
 ```bash
 python3 -m arch_rules_extraction.filter_dataset.filter_json_dataset
@@ -135,6 +148,17 @@ Arquivo gerado: arch_rules_extraction/filter_dataset/matched_comments_from_datas
 ```
 
 The script should complete in under 5 seconds and produce a non-empty CSV. If it fails, check that your virtual environment is active and dependencies are installed.
+
+**Step 2 — Database container** (no API key required, < 1 minute)
+
+```bash
+docker compose up -d
+docker compose ps
+```
+
+Expected output: the `pgvector` service listed with status `healthy`. If the container does not reach a healthy state within one minute, check that Docker is running and port 5432 is available.
+
+> Steps 1 and 2 together confirm that the full environment is ready for the pipeline. API keys are only required from Step 2 of the pipeline onward (classification, test generation, and evaluation); they are not needed for the smoke test.
 
 ---
 
@@ -267,7 +291,7 @@ All prompts used in the study are available in `shared/prompts.py`:
 
 The paper reports two manual evaluation phases:
 
-**Classification validation** (Section 3.1): a statistically representative sample of automatically classified comments was independently annotated by two evaluators (one paper author and one software engineering practitioner with 5 years of experience). The annotation guidelines are in `evaluation/annotation_guidelines.md`. The annotations from one evaluator are available in `datasets/classification_validation_sample_annotated.csv` (columns: `comment_url`, `comment_body`, `is_design_rule`, `annotator_notes`). Agreement between the two evaluators yielded a classifier precision of **83.33%**.
+**Classification validation** (Section 3.1): a statistically representative sample of automatically classified comments was annotated by two evaluators (one paper author and one software engineering practitioner with 5 years of experience), who divided the sample between them. The annotation guidelines are in `evaluation/annotation_guidelines.md`. The combined annotations from both evaluators are available in `datasets/classification_validation_sample_annotated.csv` (columns: `comment_url`, `comment_body`, `is_design_rule`, `annotator_notes`). Agreement with the manual annotations yielded a classifier precision of **83.33%**.
 
 **Test evaluation** (Section 3.2): a stratified random sample of 270 generated tests from 13 projects was evaluated manually following the same four criteria used in the automated phase (defined in `shared/prompts.py` → `get_evaluation_prompt()`). The sampling script is in `sampling/get_manual_evaluation_sample.py`. The full manual evaluation data — including LLM-as-a-Judge scores, human annotations, mutation test results, and annotator agreement columns — is in `evaluation/manual_evaluation_results.csv`. The list of 13 projects covered by the sample is in `evaluation/manual_evaluation_projects.md`.
 

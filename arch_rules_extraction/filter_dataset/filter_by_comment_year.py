@@ -16,7 +16,7 @@ load_dotenv()
 
 
 INPUT_CSV = BASE_DIR / "matched_comments_from_dataset_sample.csv"
-OUTPUT_CSV = BASE_DIR / "sample_dataset_with_comment_year.csv"
+OUTPUT_CSV = BASE_DIR / "sample_dataset_filtered_2020.csv"
 
 CACHE_FILE = BASE_DIR / "comment_year_cache.json"
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
@@ -149,6 +149,6 @@ df_filtered = df[df["comment_year"] >= 2020]
 
 print("Total comments after filtering:", len(df_filtered))
 
-df_filtered.to_csv(BASE_DIR / "sample_dataset_filtered_2020.csv", index=False)
+df_filtered.to_csv(OUTPUT_CSV, index=False)
 
 print("Filtered dataset saved:", OUTPUT_CSV)

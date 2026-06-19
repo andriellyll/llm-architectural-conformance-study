@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
 # -----------------------------
 # CONFIGURAÇÃO
 # -----------------------------
 
-CSV_PATH = "test_generation_results.csv"
+CSV_PATH = BASE_DIR / "../test_generation/test_generation_results.csv"
 
 TARGET_COMMENTS = 270
 MIN_COMMENTS_PER_PROJECT = 10
