@@ -42,7 +42,9 @@ This is a **hybrid artifact** comprising:
 ├── evaluation/
 │   ├── automatic_evaluation.py                 # Step 5: LLM-as-a-Judge evaluation
 │   ├── annotation_guidelines.md               # Annotation guidelines used by human annotators
-│   └── test_evaluation_results.csv            # Sample evaluation results (24 records)
+│   ├── test_evaluation_results.csv            # Full automated evaluation results (~10,500 records)
+│   ├── manual_evaluation_results.csv          # Full manual evaluation results (270 records)
+│   └── manual_evaluation_projects.md          # List of 13 projects in the manual evaluation sample
 ├── sampling/
 │   ├── get_classification_validation_sample.py # Sampling for classification validation
 │   └── get_manual_evaluation_sample.py         # Sampling for manual test evaluation
@@ -52,7 +54,7 @@ This is a **hybrid artifact** comprising:
 │   ├── constants.py                            # Database and embedding configuration
 │   ├── db_creation.py                          # Step 3: vector DB setup (PGVector + RAG)
 │   ├── test_generation.py                      # Step 4: ArchUnit test generation
-│   ├── test_generation_results.csv             # Sample generated tests (24 records)
+│   ├── test_generation_results.csv             # Full generated tests (~10,500 records)
 │   └── archunit-docs/                          # ArchUnit documentation (RAG corpus)
 ├── docker-compose.yml                          # Database setup
 ├── CITATION.cff                                # Citation metadata
@@ -70,16 +72,14 @@ The table below maps the main quantitative claims in the paper to the correspond
 |---|---|
 | 10,500 design-related comments extracted | `datasets/architectural_restrictions_dataset.csv` |
 | Classifier precision: 83.33% | `datasets/classification_validation_sample_annotated.csv` + `evaluation/annotation_guidelines.md` |
-| 23.87% of outputs were NO\_ARCHITECTURAL\_TEST\_POSSIBLE | `test_generation/test_generation_results.csv` (full run) |
-| 97.92% syntactic validity (automated) | `test_generation/test_generation_results.csv` + `evaluation/` |
-| 67.01% semantic alignment >= 1 (automated) | `evaluation/test_evaluation_results.csv` (full run) |
-| Manual evaluation: 270 tests, 13 projects | `sampling/get_manual_evaluation_sample.py` |
+| 23.87% of outputs were NO\_ARCHITECTURAL\_TEST\_POSSIBLE | `test_generation/test_generation_results.csv` |
+| 97.92% syntactic validity (automated) | `test_generation/test_generation_results.csv` + `evaluation/test_evaluation_results.csv` |
+| 67.01% semantic alignment >= 1 (automated) | `evaluation/test_evaluation_results.csv` |
+| Manual evaluation: 270 tests, 13 projects | `evaluation/manual_evaluation_results.csv` + `evaluation/manual_evaluation_projects.md` |
 | All LLM prompts | `shared/prompts.py` |
 | Keyword list | `arch_rules_extraction/filter_dataset/keywords.txt` |
 | Classification annotation guidelines | `evaluation/annotation_guidelines.md` |
-| Classification validation data (one annotator) | `datasets/classification_validation_sample_annotated.csv` |
-
-> Note: The sample CSVs in this repository contain 24 records each for demonstration. The full results datasets from the complete study run are described in the Datasets section below.
+| Classification validation data | `datasets/classification_validation_sample_annotated.csv` |
 
 ---
 
@@ -247,10 +247,9 @@ The full original dataset is available at:
 |---|---|---|
 | `datasets/matched_comments_from_original_dataset.csv` | After keyword-based filtering on full dataset | — |
 | `datasets/architectural_restrictions_dataset.csv` | After LLM classification on full dataset | ~24,977 |
-| `test_generation/test_generation_results.csv` | Sample generated ArchUnit tests | 24 (sample) |
-| `evaluation/test_evaluation_results.csv` | Sample automated evaluation results | 24 (sample) |
-
-> The full test generation and evaluation result files (covering ~10,500 generated tests) are not included in this repository due to size. They can be reproduced by running Steps 4–5 on `datasets/architectural_restrictions_dataset.csv`.
+| `test_generation/test_generation_results.csv` | Full generated ArchUnit tests | ~10,500 |
+| `evaluation/test_evaluation_results.csv` | Full automated evaluation results | ~10,500 |
+| `evaluation/manual_evaluation_results.csv` | Manual evaluation of 270 tests (270 tests, 13 projects) | 270 |
 
 ---
 
@@ -270,7 +269,7 @@ The paper reports two manual evaluation phases:
 
 **Classification validation** (Section 3.1): a statistically representative sample of automatically classified comments was independently annotated by two evaluators (one paper author and one software engineering practitioner with 5 years of experience). The annotation guidelines are in `evaluation/annotation_guidelines.md`. The annotations from one evaluator are available in `datasets/classification_validation_sample_annotated.csv` (columns: `comment_url`, `comment_body`, `is_design_rule`, `annotator_notes`). Agreement between the two evaluators yielded a classifier precision of **83.33%**.
 
-**Test evaluation** (Section 3.2): a stratified random sample of 270 generated tests from 13 projects was evaluated manually following the same four criteria used in the automated phase (defined in `shared/prompts.py` → `get_evaluation_prompt()`). The sampling script is in `sampling/get_manual_evaluation_sample.py`.
+**Test evaluation** (Section 3.2): a stratified random sample of 270 generated tests from 13 projects was evaluated manually following the same four criteria used in the automated phase (defined in `shared/prompts.py` → `get_evaluation_prompt()`). The sampling script is in `sampling/get_manual_evaluation_sample.py`. The full manual evaluation data — including LLM-as-a-Judge scores, human annotations, mutation test results, and annotator agreement columns — is in `evaluation/manual_evaluation_results.csv`. The list of 13 projects covered by the sample is in `evaluation/manual_evaluation_projects.md`.
 
 ---
 
