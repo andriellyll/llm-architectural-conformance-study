@@ -3,7 +3,6 @@ import json
 import os
 import sys
 import time
-from mistralai import Mistral
 import dotenv
 import re
 import requests
@@ -16,8 +15,6 @@ csv.field_size_limit(sys.maxsize)
 dotenv.load_dotenv()
 
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-
-client = Mistral()
 
 INPUT_CSV = BASE_DIR / "../test_generation/test_generation_results.csv"
 OUTPUT_CSV = BASE_DIR / "test_evaluation_results.csv"

@@ -1,5 +1,5 @@
 import csv
-from mistralai import Mistral
+from mistralai.client import Mistral
 import dotenv
 import time
 import sys

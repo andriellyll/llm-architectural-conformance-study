@@ -87,20 +87,25 @@ The table below maps the main quantitative claims in the paper to the correspond
 
 ### Requirements
 
-- Python 3.10 or 3.11 (tested on 3.11.9)
+- Python 3.10 or 3.11 (tested on 3.11.9 on Linux/WSL2)
 - Docker (for the vector database)
 - Active [Mistral AI API key](https://console.mistral.ai/) (required for Steps 2, 4, and 5)
 - GitHub personal access token (required for Step 1b only)
 
 ### 1. Create virtual environment and install dependencies
 
+On Debian/Ubuntu (including WSL2), install the `venv` module for your Python version before creating the environment:
+
 ```bash
-python3 -m venv venv
-source venv/bin/activate        # Linux/macOS
-# venv\Scripts\activate         # Windows
+sudo apt install python3.10-venv   # replace 3.10 with your Python version (e.g. python3.11-venv)
 ```
 
-Install PyTorch first (CPU-only, works on all platforms):
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install PyTorch first (CPU-only):
 
 ```bash
 pip install torch --index-url https://download.pytorch.org/whl/cpu

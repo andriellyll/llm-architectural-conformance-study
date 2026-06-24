@@ -6,7 +6,6 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ""
 import psycopg2
 from test_generation.constants import *
 from sqlalchemy import make_url
-from llama_index.llms.groq import Groq
 from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import SimpleDirectoryReader, StorageContext, VectorStoreIndex, Settings, Document
@@ -46,7 +45,6 @@ for root, dirs, files in os.walk(contents_dir):
             documents.append(Document(text=text))
 ##### SETUP LLM #####
 Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-large-en-v1.5")
-Settings.llm = Groq(model="llama3-70b-8192")
 documents = SimpleDirectoryReader(contents_dir).load_data()
 
 ##### SETUP POSTGRES #####
