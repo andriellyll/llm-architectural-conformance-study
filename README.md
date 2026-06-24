@@ -87,7 +87,7 @@ The table below maps the main quantitative claims in the paper to the correspond
 
 ### Requirements
 
-- Python 3.10 or 3.11 (tested on 3.11.9 on Linux/WSL2)
+- Python 3.10 (tested on 3.10 on Linux/WSL2)
 - Docker (for the vector database)
 - Active [Mistral AI API key](https://console.mistral.ai/) (required for Steps 2, 4, and 5)
 - GitHub personal access token (required for Step 1b only)
